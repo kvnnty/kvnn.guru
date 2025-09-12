@@ -62,7 +62,7 @@ export default function NowPlaying() {
         <div className="w-16 h-16 bg-primary-foreground rounded flex items-center justify-center">
           <Music className="text-primary" />
         </div>
-        <div className="space-y-2">
+        <div className="space-y-1">
           <p className="font-medium text-primary">Currently not playing anything</p>
           <p className="text-sm text-muted-foreground">Open Spotify and play a song!</p>
         </div>
@@ -73,7 +73,7 @@ export default function NowPlaying() {
   return (
     <div className="flex items-center space-x-3 p-4 border rounded-lg hover:shadow-md transition-shadow group">
       <img src={track.albumImageUrl} alt={`${track.album} cover`} className="w-16 h-16 rounded object-cover" />
-      <div className="flex-1 min-w-0 space-y-2">
+      <div className="flex-1 min-w-0 space-y-1">
         <a
           href={track.songUrl}
           target="_blank"
