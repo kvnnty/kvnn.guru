@@ -75,9 +75,10 @@ export default function Home() {
 
               <div className="space-y-6 max-w-md">
                 <p className="text-lg sm:text-xl text-muted-foreground leading-relaxed">
-                  Frontend Developer crafting digital experiences at the intersection of
-                  <span className="text-foreground"> design</span>,<span className="text-foreground"> technology</span>, and
-                  <span className="text-foreground"> user experience</span>.
+                  I build software that makes life easier and enjoy finding
+                  <span className="text-foreground"> smart</span>,<span className="text-foreground"> simple</span> solutions. Every project is a chance to
+                  <span className="text-foreground"> learn</span> and
+                  <span className="text-foreground"> improve</span>.
                 </p>
 
                 <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 text-sm text-muted-foreground">
