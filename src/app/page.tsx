@@ -309,7 +309,7 @@ export default function Home() {
                 {[
                   { name: "GitHub", handle: "@kvnnty", url: "https://github.com/kvnnty" },
                   { name: "LinkedIn", handle: "@tkevin", url: "https://www.linkedin.com/in/tkevin" },
-                  { name: "X", handle: "@Kevin_Tuyizere", url: "https://x.com/Kevin_Tuyizere" },
+                  { name: "X", handle: "@Kevin_Tuyizere", url: "https://x.com/__tkvnn__" },
                   { name: "Buy me a beer", handle: "@kvnnty", url: "https://buymeacoffee.com/kvnnty" },
                 ].map((social) => (
                   <Link
