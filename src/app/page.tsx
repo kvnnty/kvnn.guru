@@ -207,29 +207,25 @@ export default function Home() {
                 AI, systems, and interfaces—building things people open twice.
               </p>
             </div>
+            <figure className="rounded-2xl bg-surface p-6 ring-1 ring-border sm:p-8">
+              <blockquote className="text-lg leading-relaxed text-foreground sm:text-xl">
+                “{site.quotes[1].text}”
+              </blockquote>
+              <figcaption className="mt-4 font-mono text-[11px] uppercase tracking-[0.14em] text-muted">
+                — {site.quotes[1].author}
+              </figcaption>
+            </figure>
+          </section>
 
-            <div className="space-y-6 sm:space-y-8">
-              <div className="text-sm text-muted-foreground font-mono">ELSEWHERE</div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {[
-                  { name: "GitHub", handle: "@kvnnty", url: "https://github.com/kvnnty" },
-                  { name: "LinkedIn", handle: "@tkevin", url: "https://www.linkedin.com/in/tkevin" },
-                  { name: "X", handle: "@kvnnty", url: "https://x.com/kvnnty" },
-                  { name: "Buy me a beer", handle: "@kvnnty", url: "https://buymeacoffee.com/kvnnty" },
-                ].map((social) => (
-                  <Link
-                    key={social.name}
-                    href={social.url}
-                    target="_blank"
-                    className={clsx("group p-4 border border-border rounded-lg hover:border-muted-foreground/50 transition-all duration-300 hover:shadow-sm")}>
-                    <div className="space-y-2">
-                      <div className="text-foreground group-hover:text-muted-foreground transition-colors duration-300">{social.name}</div>
-                      <div className="text-sm text-muted-foreground">{social.handle}</div>
-                    </div>
-                  </Link>
-                ))}
-              </div>
+          <section id="connect" className="mt-20 scroll-mt-10 sm:mt-24">
+            <div className="overflow-hidden rounded-2xl ring-1 ring-border">
+              <Image
+                src="https://rstr.in/monogram/backdrops/uyEOXOz6AqJ"
+                alt=""
+                width={1376}
+                height={768}
+                className="aspect-[21/9] w-full object-cover"
+              />
             </div>
             <h2 className="mt-10 font-display text-3xl tracking-tight text-foreground sm:text-4xl">
               Let&apos;s talk
