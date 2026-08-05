@@ -1,378 +1,274 @@
-"use client";
-
-import clsx from "clsx";
-import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
-import NowPlaying from "../components/spotify-integration";
 import Image from "next/image";
+import Link from "next/link";
+import GradualBlur from "@/components/GradualBlur";
+import { LocalTime } from "@/components/local-time";
+import { NavMark } from "@/components/nav-mark";
+import { SocialIcons } from "@/components/social-icons";
+import NowPlaying from "@/components/spotify-integration";
+import { projects } from "@/data/projects";
+import { site } from "@/data/site";
 
-export default function Home() {
-  const [isDark, setIsDark] = useState(true);
-  const [activeSection, setActiveSection] = useState("");
-  const sectionsRef = useRef<(HTMLElement | null)[]>([]);
+function ProjectRow({
+  project,
+  index,
+}: {
+  project: (typeof projects)[number];
+  index: number;
+}) {
+  const tilt = index % 2 === 0 ? "-rotate-2" : "rotate-2";
 
-  useEffect(() => {
-    document.documentElement.classList.toggle("dark", isDark);
-  }, [isDark]);
+  const content = (
+    <>
+      <div className="relative h-11 w-11 shrink-0 sm:h-12 sm:w-12">
+        <div
+          className={`absolute inset-0 overflow-hidden rounded-md ring-1 ring-border transition-transform duration-300 ${tilt} group-hover:rotate-0`}
+        >
+          {project.image ? (
+            <Image
+              src={project.image}
+              alt=""
+              width={96}
+              height={96}
+              className="h-full w-full object-cover"
+            />
+          ) : (
+            <div className="h-full w-full bg-surface" />
+          )}
+        </div>
+      </div>
+      <div className="min-w-0 flex-1">
+        <div className="flex flex-wrap items-baseline gap-x-3 gap-y-0.5">
+          <span className="font-mono text-xs text-muted">
+            {String(index + 1).padStart(2, "0")}
+          </span>
+          <span className="text-lg text-foreground transition-colors group-hover:text-accent sm:text-xl">
+            {project.name}
+          </span>
+        </div>
+        <p className="mt-1 max-w-md text-sm leading-relaxed text-muted">
+          {project.blurb}
+        </p>
+      </div>
+      <span className="hidden shrink-0 font-mono text-xs text-muted transition-transform group-hover:translate-x-1 sm:inline">
+        {project.year} →
+      </span>
+    </>
+  );
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("animate-fade-in-up");
-            setActiveSection(entry.target.id);
-          }
-        });
-      },
-      { threshold: 0.3, rootMargin: "0px 0px -20% 0px" }
+  const className =
+    "group flex items-start gap-4 border-b border-border py-5 sm:items-center sm:gap-5 sm:py-6";
+
+  if (project.href) {
+    return (
+      <a
+        href={project.href}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={className}
+      >
+        {content}
+      </a>
     );
-
-    sectionsRef.current.forEach((section) => {
-      if (section) observer.observe(section);
-    });
-
-    return () => observer.disconnect();
-  }, []);
-
-  const toggleTheme = () => {
-    setIsDark(!isDark);
-  };
+  }
 
   return (
-    <div className="min-h-screen bg-background text-foreground relative">
-      <nav className="fixed left-8 top-1/2 -translate-y-1/2 z-10 hidden lg:block">
-        <div className="flex flex-col gap-4">
-          {["intro", "work", "thoughts", "connect"].map((section) => (
-            <button
-              key={section}
-              onClick={() => document.getElementById(section)?.scrollIntoView({ behavior: "smooth" })}
-              className={`w-2 h-8 rounded-full transition-all duration-500 ${
-                activeSection === section ? "bg-foreground" : "bg-muted-foreground/30 hover:bg-muted-foreground/60"
-              }`}
-              aria-label={`Navigate to ${section}`}
-            />
-          ))}
-        </div>
-      </nav>
+    <Link href={`/work/${project.slug}`} className={className}>
+      {content}
+    </Link>
+  );
+}
 
-      <main className="max-w-4xl mx-auto px-6 sm:px-8 lg:px-16">
-        <header
-          id="intro"
-          //@ts-ignore
-          ref={(el) => (sectionsRef.current[0] = el)}
-          className="min-h-screen flex flex-col justify-center opacity-0">
-          <div className="grid lg:grid-cols-5 gap-12 sm:gap-16 w-full">
-            <div className="lg:col-span-3 space-y-6 sm:space-y-8">
-              <div className="space-y-3 sm:space-y-2">
-                <div className="text-sm text-muted-foreground font-mono tracking-wider">PORTFOLIO / 2025</div>
-                <h1 className="text-5xl sm:text-6xl lg:text-7xl font-light leading-tight">
-                  <span className="text-3xl lg:text-4xl tracking-widest">KEVIN</span>
-                  <br />
-                  <span className="text-muted-foreground">TUYIZERE</span>
-                </h1>
-              </div>
-
-              <div className="space-y-6 max-w-md">
-                <p className="text-lg sm:text-xl text-muted-foreground leading-relaxed">
-                  I build software that makes life easier and enjoy finding
-                  <span className="text-foreground"> smart</span>,<span className="text-foreground"> simple</span> solutions. Every project is a chance to
-                  <span className="text-foreground"> learn</span> and
-                  <span className="text-foreground"> improve</span>.
-                </p>
-
-                <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 text-sm text-muted-foreground">
-                  <div className="flex items-center gap-2">
-                    <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                    Available for work
-                  </div>
-                  <div>Kigali, Rwanda</div>
-                </div>
-              </div>
-            </div>
-
-            <div className="lg:col-span-2 flex flex-col justify-end space-y-6 sm:space-y-8 mt-8 lg:mt-0">
-              <div className="space-y-4">
-                <div className="text-sm text-muted-foreground font-mono">CURRENTLY</div>
-                <div className="space-y-2">
-                  <div className="text-foreground">Full Stack Engineer</div>
-                  <div className="text-muted-foreground">
-                    <Link href="https://www.webbuddy.agency" target="_blank" className="hover:underline italic">
-                      @WebBuddy
-                    </Link>
-                  </div>
-                  <div className="text-xs text-muted-foreground">2024 — Present</div>
-                </div>
-              </div>
-
-              <div className="space-y-4">
-                <div className="text-sm text-muted-foreground font-mono">FOCUS</div>
-                <div className="flex flex-wrap gap-2">
-                  {["Frontend", "Backend", "DevOps & Cloud", "DB Infrastructure", "System Architecture", "Agile Practices"].map((skill) => (
-                    <span
-                      key={skill}
-                      className="px-3 py-1 text-xs border border-border rounded-full hover:border-muted-foreground/50 transition-colors duration-300">
-                      {skill}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="mt-20 space-y-4">
-            <h2 className="text-xl text-muted-foreground">“Live as if you were to die tomorrow. Learn as if you were to live forever.”</h2>
-            <p className="text-primary text-sm">— Mahatma Gandhi</p>
-          </div>
-        </header>
-
-        <section
-          id="work"
-          //@ts-ignore
-          ref={(el) => (sectionsRef.current[1] = el)}
-          className="min-h-screen py-20 sm:py-32 opacity-0">
-          <div className="space-y-12 sm:space-y-16">
-            <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
-              <h2 className="text-3xl sm:text-4xl font-light">Selected Work Experience</h2>
-              <div className="text-sm text-muted-foreground font-mono">2019 — 2025</div>
-            </div>
-
-            <div className="space-y-8 sm:space-y-12">
-              {[
-                {
-                  year: "2025",
-                  role: "Full Stack Engineer",
-                  company: "webbuddy.agency",
-                  description: "Building AI-driven web and mobile solutions at Webbuddy LLC.",
-                  tech: ["React", "Next.js", "TypeScript", "GraphQL", "NestJS"],
-                },
-                {
-                  year: "2025",
-                  role: "Full Stack Engineer",
-                  company: "nimbus.drive",
-                  description: "Built a secure, cloud storage and collaboration platform for files.",
-                  tech: ["React", "Next.js", "Spring Boot", "GCP", "Cloud computing", "Kafka"],
-                },
-                {
-                  year: "2024",
-                  role: "Lead Developer",
-                  company: "growstack.ai",
-                  description: "AI-powered marketing tool for automated workflows.",
-                  tech: ["Next.js", "React native", "AWS", "MCP", "Terraform"],
-                },
-              ].map((job, index) => (
-                <div
-                  key={index}
-                  className="group grid lg:grid-cols-12 gap-4 sm:gap-8 py-6 sm:py-8 border-b border-border/50 hover:border-border transition-colors duration-500">
-                  <div className="lg:col-span-2">
-                    <div className="text-xl sm:text-2xl font-light text-muted-foreground group-hover:text-foreground transition-colors duration-500">
-                      {job.year}
-                    </div>
-                  </div>
-
-                  <div className="lg:col-span-6 space-y-3">
-                    <div className="space-y-2">
-                      <h3 className="text-lg sm:text-xl font-medium">{job.role}</h3>
-                      <div className="text-muted-foreground cursor-pointer">{job.company}</div>
-                    </div>
-                    <p className="text-muted-foreground leading-relaxed max-w-lg">{job.description}</p>
-                  </div>
-
-                  <div className="lg:col-span-4">
-                    <div className="flex flex-wrap gap-2 lg:justify-end mt-2 lg:mt-0">
-                      {job.tech.map((tech) => (
-                        <span
-                          key={tech}
-                          className="border px-2 py-1 text-xs text-muted-foreground rounded-full group-hover:border-muted-foreground/50 transition-colors duration-500">
-                          {tech}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            {/* CV Button */}
-            <div className="mt-8 flex justify-center">
+export default function Home() {
+  return (
+    <section
+      style={{ position: "relative", height: "100vh", overflow: "hidden" }}
+    >
+      <div
+        style={{ height: "100%", overflowY: "auto", padding: "6rem 2rem" }}
+      >
+        <div className="relative mx-auto max-w-3xl sm:px-2 lg:px-4">
+          <nav className="flex items-center justify-between gap-4">
+            <NavMark />
+            <div className="flex items-center gap-5 text-sm text-muted">
+              <a href="#work" className="hover:text-foreground">
+                Work
+              </a>
+              <a href="#connect" className="hover:text-foreground">
+                Contact
+              </a>
               <a
-                href={`mailto:kevin@webbuddy.agency?subject=Request%20for%20CV&body=Hi%20Kevin,%0D%0A%0D%0AI%20came%20across%20your%20portfolio%20and%20would%20love%20to%20read%20your%20CV.%0D%0A%0D%0AThank%20you!`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="px-6 py-2 bg-foreground text-background rounded-lg font-medium hover:bg-muted-foreground transition-colors duration-300 text-xs uppercase">
-                Read CV for more
+                href={`mailto:${site.email}`}
+                className="rounded-full bg-foreground px-3.5 py-1.5 text-surface transition-opacity hover:opacity-80"
+              >
+                Email
               </a>
             </div>
-          </div>
-        </section>
+          </nav>
 
-        <section
-          id="thoughts"
-          //@ts-ignore
-          ref={(el) => (sectionsRef.current[2] = el)}
-          className="min-h-screen py-20 sm:py-32 opacity-0">
-          <div className="space-y-12 sm:space-y-16">
-            <h2 className="text-3xl sm:text-4xl font-light">Recent Thoughts</h2>
-
-            <div className="grid gap-6 sm:gap-8 lg:grid-cols-2">
-              {[
-                {
-                  title: "The Future of Web Development",
-                  excerpt: "Exploring how AI and automation are reshaping the way we build for the web.",
-                  date: "Dec 2024",
-                  readTime: "5 min",
-                },
-                {
-                  title: "Design Systems at Scale",
-                  excerpt: "Lessons learned from building and maintaining design systems across multiple products.",
-                  date: "Nov 2024",
-                  readTime: "8 min",
-                },
-                {
-                  title: "Performance-First Development",
-                  excerpt: "Why performance should be a first-class citizen in your development workflow.",
-                  date: "Oct 2024",
-                  readTime: "6 min",
-                },
-                {
-                  title: "The Art of Code Review",
-                  excerpt: "Building better software through thoughtful and constructive code reviews.",
-                  date: "Sep 2024",
-                  readTime: "4 min",
-                },
-              ].map((post, index) => (
-                <article
-                  key={index}
-                  className="group p-6 sm:p-8 border border-border rounded-lg hover:border-muted-foreground/50 transition-all duration-500 hover:shadow-lg cursor-pointer">
-                  <div className="space-y-4">
-                    <div className="flex items-center justify-between text-xs text-muted-foreground font-mono">
-                      <span>{post.date}</span>
-                      <span>{post.readTime}</span>
-                    </div>
-
-                    <h3 className="text-lg sm:text-xl font-medium group-hover:text-muted-foreground transition-colors duration-300">{post.title}</h3>
-
-                    <p className="text-muted-foreground leading-relaxed">{post.excerpt}</p>
-
-                    <div className="flex items-center gap-2 text-sm text-muted-foreground group-hover:text-foreground transition-colors duration-300">
-                      <span>Read more</span>
-                      <svg
-                        className="w-4 h-4 transform group-hover:translate-x-1 transition-transform duration-300"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                      </svg>
-                    </div>
-                  </div>
-                </article>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        <section
-          id="connect"
-          //@ts-ignore
-          ref={(el) => (sectionsRef.current[3] = el)}
-          className="py-20 sm:py-32 opacity-0">
-          <div className="grid lg:grid-cols-2 gap-12 sm:gap-16">
-            <div className="space-y-6 sm:space-y-8">
-              <h2 className="text-3xl sm:text-4xl font-light">Let's Connect</h2>
-
-              <div className="space-y-6">
-                <p className="text-lg sm:text-xl text-muted-foreground leading-relaxed">
-                  Always interested in new opportunities, collaborations, and conversations about the current technology landscape.
-                </p>
-
-                <div className="space-y-4">
-                  <Link
-                    href="mailto:kevin@webbuddy.agency"
-                    className="group flex items-center gap-3 text-foreground hover:text-muted-foreground transition-colors duration-300">
-                    <span className="text-base sm:text-lg">kevin@webbuddy.agency</span>
-                    <svg
-                      className="w-5 h-5 transform group-hover:translate-x-1 transition-transform duration-300"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                    </svg>
-                  </Link>
-                </div>
-              </div>
+          <header className="mt-16 sm:mt-20">
+            <div className="overflow-hidden rounded-2xl ring-1 ring-border">
+              <Image
+                src={site.heroImage}
+                alt=""
+                width={1376}
+                height={768}
+                priority
+                className="aspect-[16/9] w-full object-cover"
+              />
             </div>
 
-            <div className="space-y-6 sm:space-y-8">
-              <div className="text-sm text-muted-foreground font-mono">ELSEWHERE</div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {[
-                  { name: "GitHub", handle: "@kvnnty", url: "https://github.com/kvnnty" },
-                  { name: "LinkedIn", handle: "@tkevin", url: "https://www.linkedin.com/in/tkevin" },
-                  { name: "X", handle: "@Kevin_Tuyizere", url: "https://x.com/__tkvnn__" },
-                  { name: "Buy me a beer", handle: "@kvnnty", url: "https://buymeacoffee.com/kvnnty" },
-                ].map((social) => (
-                  <Link
-                    key={social.name}
-                    href={social.url}
-                    target="_blank"
-                    className={clsx("group p-4 border border-border rounded-lg hover:border-muted-foreground/50 transition-all duration-300 hover:shadow-sm")}>
-                    <div className="space-y-2">
-                      <div className="text-foreground group-hover:text-muted-foreground transition-colors duration-300">{social.name}</div>
-                      <div className="text-sm text-muted-foreground">{social.handle}</div>
-                    </div>
-                  </Link>
-                ))}
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <div className="space-y-4 mb-10 mt-20 sm:mt-32">
-          <div className="flex items-center gap-2">
-            <Image src="/spotify.svg" alt="" width={15} height={15} />
-            <p className="text-sm text-muted-foreground">Currently listening.</p>
-          </div>
-          <NowPlaying />
-        </div>
-        <footer className="mt-10 pt-10 pb-16 border-t border-border">
-          <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6 sm:gap-8">
-            <div className="space-y-2">
-              <div className="text-sm text-muted-foreground">© 2025 Kevin Tuyizere. All rights reserved.</div>
-              <div className="text-xs text-muted-foreground">Designed & Built by T.Kevin.</div>
-            </div>
-
-            <div className="flex items-center gap-4">
-              <button
-                onClick={toggleTheme}
-                className="cursor-pointer group p-3 rounded-lg border border-border hover:border-muted-foreground/50 transition-all duration-300"
-                aria-label="Toggle theme">
-                {isDark ? (
-                  <svg
-                    className="w-4 h-4 text-muted-foreground group-hover:text-foreground transition-colors duration-300"
-                    fill="currentColor"
-                    viewBox="0 0 20 20">
-                    <path
-                      fillRule="evenodd"
-                      d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"
-                      clipRule="evenodd"
+            <div className="mt-10 flex flex-wrap items-center gap-3 font-mono text-[11px] uppercase tracking-[0.16em] text-muted">
+              <span>{site.location}</span>
+              {site.available && (
+                <>
+                  <span className="text-border" aria-hidden>
+                    /
+                  </span>
+                  <span className="inline-flex items-center gap-2 text-accent">
+                    <span
+                      className="h-1.5 w-1.5 rounded-full bg-accent"
+                      aria-hidden
                     />
-                  </svg>
-                ) : (
-                  <svg
-                    className="w-4 h-4 text-muted-foreground group-hover:text-foreground transition-colors duration-300"
-                    fill="currentColor"
-                    viewBox="0 0 20 20">
-                    <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
-                  </svg>
-                )}
-              </button>
+                    Available for work
+                  </span>
+                </>
+              )}
             </div>
-          </div>
-        </footer>
-      </main>
 
-      <div className="fixed bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-background via-background/80 to-transparent pointer-events-none"></div>
-    </div>
+            <h1 className="mt-5 font-display text-[clamp(2.5rem,8vw,4.25rem)] leading-[1.05] tracking-tight text-foreground">
+              {site.name}
+            </h1>
+
+            <p className="mt-4 max-w-lg text-xl leading-snug text-muted sm:text-2xl text-balance">
+              {site.tagline}
+            </p>
+
+            <p className="mt-5 max-w-xl text-[15px] leading-relaxed text-muted sm:text-base">
+              {site.bio}
+            </p>
+
+            <p className="mt-7 text-sm text-muted">
+              Currently {site.currently.role} at{" "}
+              <a
+                href={site.currently.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-foreground underline decoration-border underline-offset-4 hover:decoration-accent"
+              >
+                {site.currently.company}
+              </a>
+            </p>
+          </header>
+
+          <figure className="mt-14 border-l-2 border-accent pl-5 sm:mt-16 sm:pl-7">
+            <blockquote className="text-xl leading-relaxed text-foreground sm:text-2xl text-balance">
+              “{site.quotes[0].text}”
+            </blockquote>
+            <figcaption className="mt-4 font-mono text-[11px] uppercase tracking-[0.14em] text-muted">
+              — {site.quotes[0].author}
+            </figcaption>
+          </figure>
+
+          <section id="work" className="mt-20 scroll-mt-10 sm:mt-24">
+            <div className="flex items-end justify-between gap-4 border-b border-border pb-4">
+              <h2 className="font-display text-3xl tracking-tight text-foreground sm:text-4xl">
+                Selected work
+              </h2>
+              <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-muted">
+                {String(projects.length).padStart(2, "0")}
+              </span>
+            </div>
+
+            <ul className="mt-1">
+              {projects.map((project, index) => (
+                <li key={project.slug}>
+                  <ProjectRow project={project} index={index} />
+                </li>
+              ))}
+            </ul>
+
+            <p className="mt-8">
+              <a
+                href={site.cvMailto.href}
+                className="text-sm text-foreground underline decoration-border underline-offset-4 hover:decoration-accent"
+              >
+                {site.cvMailto.label} →
+              </a>
+            </p>
+          </section>
+
+          <section className="mt-20 grid gap-10 sm:mt-24 sm:grid-cols-2 sm:gap-12">
+            <div>
+              <h2 className="font-mono text-[11px] uppercase tracking-[0.16em] text-muted">
+                How I work
+              </h2>
+              <p className="mt-4 text-[15px] leading-relaxed text-muted sm:text-base">
+                I care about architecture that lasts, product taste, and shipping
+                before the idea goes cold. Most of my time lives at the edge of
+                AI, systems, and interfaces—building things people open twice.
+              </p>
+            </div>
+            <figure className="rounded-2xl bg-surface p-6 ring-1 ring-border sm:p-8">
+              <blockquote className="text-lg leading-relaxed text-foreground sm:text-xl">
+                “{site.quotes[1].text}”
+              </blockquote>
+              <figcaption className="mt-4 font-mono text-[11px] uppercase tracking-[0.14em] text-muted">
+                — {site.quotes[1].author}
+              </figcaption>
+            </figure>
+          </section>
+
+          <section id="connect" className="mt-20 scroll-mt-10 sm:mt-24">
+            <div className="overflow-hidden rounded-2xl ring-1 ring-border">
+              <Image
+                src="https://rstr.in/monogram/backdrops/uyEOXOz6AqJ"
+                alt=""
+                width={1376}
+                height={768}
+                className="aspect-[21/9] w-full object-cover"
+              />
+            </div>
+            <h2 className="mt-10 font-display text-3xl tracking-tight text-foreground sm:text-4xl">
+              Let&apos;s talk
+            </h2>
+            <p className="mt-4 max-w-md text-[15px] leading-relaxed text-muted">
+              Open to collaborations, product challenges, and sharp conversations
+              about building software that holds up.
+            </p>
+            <a
+              href={`mailto:${site.email}`}
+              className="mt-6 inline-block text-xl text-accent underline decoration-accent/30 underline-offset-4 transition-colors hover:decoration-accent sm:text-2xl"
+            >
+              {site.email}
+            </a>
+            <SocialIcons className="mt-10" />
+          </section>
+
+          <footer className="mt-24 space-y-6 border-t border-border pt-8 pb-8">
+            <NowPlaying />
+            <div className="flex flex-col gap-2 text-xs text-muted sm:flex-row sm:items-center sm:justify-between">
+              <p>
+                © {new Date().getFullYear()} {site.name}
+              </p>
+              <p className="font-mono text-[11px] uppercase tracking-[0.14em]">
+                Kigali <span className="text-border">/</span> <LocalTime />{" "}
+                <span className="text-border">/</span> CAT
+              </p>
+            </div>
+          </footer>
+        </div>
+      </div>
+
+      <GradualBlur
+        target="parent"
+        position="bottom"
+        height="3rem"
+        strength={2}
+        divCount={5}
+        curve="bezier"
+        exponential={true}
+        opacity={1}
+      />
+    </section>
   );
 }
