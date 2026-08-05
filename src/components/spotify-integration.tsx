@@ -1,13 +1,12 @@
 "use client";
 
-import { Music } from "lucide-react";
-import { useState, useEffect } from "react";
 import axios from "axios";
+import Image from "next/image";
+import { useEffect, useState } from "react";
 
 interface SpotifyTrack {
   title: string;
   artist: string;
-  album: string;
   albumImageUrl: string;
   songUrl: string;
   isPlaying: boolean;
@@ -15,85 +14,55 @@ interface SpotifyTrack {
 
 export default function NowPlaying() {
   const [track, setTrack] = useState<SpotifyTrack | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchCurrentlyPlaying = async () => {
+    const load = async () => {
       try {
         const { data } = await axios.get("/api/spotify/currently-playing");
-
-        if (!data) {
-          setError("Currently not playing anything");
-          return;
-        }
-        setTrack(data);
-        setError(null);
-      } catch (err) {
-        console.error("Error fetching currently playing:", err);
-        setError("Failed to fetch current track");
-      } finally {
-        setLoading(false);
+        if (data && !data.error) setTrack(data);
+      } catch {
+        /* quiet fail */
       }
     };
-
-    fetchCurrentlyPlaying();
-
-    const interval = setInterval(fetchCurrentlyPlaying, 10000);
-
-    return () => clearInterval(interval);
+    load();
+    const id = setInterval(load, 15000);
+    return () => clearInterval(id);
   }, []);
 
-  if (loading) {
-    return (
-      <div className="flex items-center space-x-3 p-4 border rounded-lg animate-pulse">
-        <div className="w-20 h-20 bg-primary-foreground rounded"></div>
-        <div className="flex-1">
-          <div className="h-4 bg-primary-foreground rounded w-3/4 mb-2"></div>
-          <div className="h-3 bg-primary-foreground rounded w-1/2"></div>
-        </div>
-      </div>
-    );
-  }
-
-  if (!track || error) {
-    return (
-      <div className="flex items-center space-x-3 p-4 border rounded-lg">
-        <div className="w-16 h-16 bg-primary-foreground rounded flex items-center justify-center">
-          <Music className="text-primary" />
-        </div>
-        <div className="space-y-1">
-          <p className="font-medium text-primary">Currently not playing anything</p>
-          <p className="text-sm text-muted-foreground">Open Spotify and play a song!</p>
-        </div>
-      </div>
-    );
-  }
+  if (!track) return null;
 
   return (
-    <div className="flex items-center space-x-3 p-4 border rounded-lg hover:shadow-md transition-shadow group">
-      <img src={track.albumImageUrl} alt={`${track.album} cover`} className="w-16 h-16 rounded object-cover" />
-      <div className="flex-1 min-w-0 space-y-1">
-        <a
-          href={track.songUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="font-medium text-primary group-hover:text-green-600 transition-colors block truncate">
+    <a
+      href={track.songUrl}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="inline-flex max-w-full items-center gap-3 rounded-xl bg-surface px-3 py-2 ring-1 ring-border transition-colors hover:ring-foreground/20"
+    >
+      {track.albumImageUrl ? (
+        <img
+          src={track.albumImageUrl}
+          alt=""
+          width={48}
+          height={48}
+          className="h-12 w-12 shrink-0 rounded-md object-cover"
+        />
+      ) : null}
+      <span className="min-w-0 flex-1 space-y-1">
+        <span className="block font-mono text-[10px] uppercase tracking-[0.12em] text-muted">
+          {track.isPlaying ? "Listening now" : "Played recently"}
+        </span>
+        <span className="block truncate text-sm text-foreground">
           {track.title}
-        </a>
-        <p className="text-sm text-muted-foreground truncate">by {track.artist}</p>
-      </div>
-      <div className="flex flex-col items-end">
-        {track.isPlaying ? (
-          <div className="flex items-center space-x-1">
-            <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-            <span className="text-xs text-green-600 font-medium">Playing</span>
-          </div>
-        ) : (
-          <span className="text-xs text-gray-500 font-medium">Paused</span>
-        )}
-        <div className="text-xs text-muted-foreground mt-1">Spotify</div>
-      </div>
-    </div>
+          <span className="text-muted"> · {track.artist}</span>
+        </span>
+      </span>
+      <Image
+        src="/spotify.svg"
+        alt="Spotify"
+        width={20}
+        height={20}
+        className="ml-5 h-5 w-5 shrink-0"
+      />
+    </a>
   );
 }
