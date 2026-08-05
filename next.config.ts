@@ -17,6 +17,22 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "rstr.in",
       },
+      {
+        protocol: "https",
+        hostname: "avatars.githubusercontent.com",
+      },
+      {
+        protocol: "https",
+        hostname: "pbs.twimg.com",
+      },
+      {
+        protocol: "https",
+        hostname: "images.chesscomfiles.com",
+      },
+      {
+        protocol: "https",
+        hostname: "image.api.playstation.com",
+      },
     ],
   },
 };

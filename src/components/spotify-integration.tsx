@@ -49,7 +49,7 @@ export default function NowPlaying() {
       ) : null}
       <span className="min-w-0 flex-1 space-y-1">
         <span className="block font-mono text-[10px] uppercase tracking-[0.12em] text-muted">
-          {track.isPlaying ? "Now playing" : "Recently played"}
+          {track.isPlaying ? "Listening now" : "Played recently"}
         </span>
         <span className="block truncate text-sm text-foreground">
           {track.title}

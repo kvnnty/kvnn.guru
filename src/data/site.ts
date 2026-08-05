@@ -6,13 +6,15 @@ export const site = {
   available: true,
   email: "contact@kvnn.guru",
   url: "https://kvnn.guru",
-  tagline: "I build tools that feel inevitable once they exist.",
-  bio: "Full-stack engineer focused on AI products, systems that hold up, and interfaces people trust. Based in Kigali—shipping for the world.",
+  tagline: "I build software that earns its place.",
+  bio: "Full-stack engineer focused on AI products, SaaS, systems that hold up, and interfaces people trust. Based in Kigali—shipping for the world.",
   description:
     "Kevin Tuyizere is a software engineer and product builder in Kigali. Creator of Arcon, Sploy, and DroidStack.",
-  // Illustrations sourced from https://raster.app/changelog
   heroImage: "https://rstr.in/monogram/backdrops/nADH-APGYGX",
   avatar: "https://rstr.in/monogram/backdrops/uyEOXOz6AqJ",
+  statsImages: {
+    hero: "https://rstr.in/monogram/backdrops/FkLuyE_CZ7w",
+  },
   currently: {
     role: "Full Stack Engineer",
     company: "WebBuddy",

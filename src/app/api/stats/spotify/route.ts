@@ -5,5 +5,5 @@ export const dynamic = "force-dynamic";
 
 export async function GET() {
   const data = await getSpotifyStats();
-  return NextResponse.json(data.track);
+  return NextResponse.json(data);
 }

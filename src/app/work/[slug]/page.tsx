@@ -52,15 +52,6 @@ const details: Record<string, { summary: string; points: string[] }> = {
       "Web and mobile surfaces with Next.js and React Native",
     ],
   },
-  webbuddy: {
-    summary:
-      "At WebBuddy I ship AI-driven web and mobile products for clients—speed without sacrificing quality.",
-    points: [
-      "Full-stack delivery with React, Next.js, and NestJS",
-      "GraphQL APIs and product-facing interfaces",
-      "Client work that has to hold up in production",
-    ],
-  },
 };
 
 type Props = { params: Promise<{ slug: string }> };

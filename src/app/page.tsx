@@ -15,14 +15,10 @@ function ProjectRow({
   project: (typeof projects)[number];
   index: number;
 }) {
-  const tilt = index % 2 === 0 ? "-rotate-2" : "rotate-2";
-
   const content = (
     <>
       <div className="relative h-11 w-11 shrink-0 sm:h-12 sm:w-12">
-        <div
-          className={`absolute inset-0 overflow-hidden rounded-md ring-1 ring-border transition-transform duration-300 ${tilt} group-hover:rotate-0`}
-        >
+        <div className="absolute inset-0 overflow-hidden rounded-md ring-1 ring-border">
           {project.image ? (
             <Image
               src={project.image}
@@ -93,6 +89,9 @@ export default function Home() {
               <a href="#work" className="hover:text-foreground">
                 Work
               </a>
+              <Link href="/stats" className="hover:text-foreground">
+                Stats & Activity
+              </Link>
               <a href="#connect" className="hover:text-foreground">
                 Contact
               </a>

@@ -7,7 +7,6 @@ export type Project = {
   href?: string;
 };
 
-// Illustration URLs from https://raster.app/changelog (rstr.in CDN)
 export const projects: Project[] = [
   {
     slug: "arcon",
@@ -48,15 +47,6 @@ export const projects: Project[] = [
       "AI marketing workflows that run across channels without babysitting every step.",
     year: "2024",
     image: "https://rstr.in/monogram/backdrops/f4YN2FhSGeS",
-  },
-  {
-    slug: "webbuddy",
-    name: "WebBuddy",
-    blurb:
-      "AI-driven web and mobile products for clients who need speed without sacrificing craft.",
-    year: "2024",
-    image: "https://rstr.in/monogram/backdrops/8PAp4acBElh",
-    href: "https://www.webbuddy.agency",
   },
 ];
 
