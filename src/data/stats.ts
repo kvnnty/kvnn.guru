@@ -3,7 +3,7 @@ export const statsConfig = {
     username: "kvnnty",
   },
   chess: {
-    username: "",
+    username: "1mbatmann",
   },
   playstation: {
     onlineId: "kvnnty",
