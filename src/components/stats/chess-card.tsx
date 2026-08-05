@@ -21,7 +21,7 @@ export async function ChessCard() {
     return (
       <StatsCard href={data.profileUrl}>
         <StatsCardHeader label="Chess.com" href={data.profileUrl} />
-        <StatsEmpty message="Set CHESS_USERNAME to show chess stats." />
+        <StatsEmpty message="Chess.com stats are not available at the moment." />
       </StatsCard>
     );
   }
